@@ -12,7 +12,9 @@ class Stepper:
         self.dir = dir_pin
 
         self.stp.init(Pin.OUT)
-        self.dir.init(Pin.OUT)
+
+        if self.dir is not None:
+            self.dir.init(Pin.OUT)
 
         self.step_time = 20  # us
         self.steps_per_rev = 1600
@@ -20,7 +22,8 @@ class Stepper:
 
     def steps(self, step_count):
         """Rotate stepper for given steps."""
-        self.dir.value(0 if step_count > 0 else 1)
+        if self.dir is not None:
+            self.dir.value(0 if step_count > 0 else 1)
         for i in range(abs(step_count)):
             self.stp.value(1)
             sleep_us(self.step_time)
