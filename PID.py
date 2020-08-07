@@ -1,26 +1,22 @@
-# -*- coding: utf-8 -*-
-"""
-Spyder Editor
-
-This is a temporary script file.
-"""
-
 class Pid:
     """
-    Discrete PID control
+    PID control
+    Stores a history
+    returns a float when updated
+    intented to go between 0 and 100
     """
 
-    def __init__(self, target, P=3.0, I=0.01, D=0.0):
+    def __init__(self, target, P, I, D, memory):
 
         self.Kp=P
         self.Ki=I
         self.Kd=D
-
+        self.memory = memory
         self.I_value = 0
         self.P_value = 0
         self.D_value = 0
-        self.history = collections.deque(maxlen=20)
-        for i in range(20):
+        self.history = collections.deque(maxlen=self.memory)
+        for i in range(self.memory):
             self.history.append(0)
         
         self.target=target
@@ -39,7 +35,7 @@ class Pid:
         self.D_value = self.Kd * (self.history[-1]-self.history[-2])
         
         self.I_value = 0
-        for i in range(20):
+        for i in range(self.memory):
             self.I_value += (self.target-self.history[i]) * self.Ki
             
     
