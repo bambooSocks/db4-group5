@@ -14,11 +14,11 @@ import utime
 ADC_DELAY = 10
 DAC_DELAY = 5
 
-ADC_PIN_NO = 32
+ADC_PIN_NO = 34
 DAC_PIN_NO = 25
 
 NUM_SAMPLES = 50
-ADC_MAX = 4095 # 1023
+ADC_MAX = 1023 # 1023
 DAC_MAX = 255
 
 DAC_Vmax = 3.15
@@ -31,7 +31,7 @@ look_up_ADC = []
 # Initialize ADC
 adc = ADC(Pin(ADC_PIN_NO))
 adc.atten(ADC.ATTN_11DB)
-adc.width(ADC.WIDTH_12BIT) # was 10
+adc.width(ADC.WIDTH_10BIT) # was 10
 
 # Initialize DAC
 dac = DAC(Pin(DAC_PIN_NO), bits=8)
@@ -56,7 +56,7 @@ adc_V_lookup = []
 for i in range(0, ADC_MAX+1):
     gc.collect()
     gc.mem_free()
-    print('Processing index ' + str(i))
+    print('xProcessing index ' + str(i))
     if adc_read.count(i) == 1:
         print('  1 to 1 match!')
         # There is a 1 to 1 match

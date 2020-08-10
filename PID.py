@@ -5,7 +5,7 @@ class Pid:
     returns a float when updated
     intented to go between 0 and 100
     """
-
+    from collections import deque
     def __init__(self, target, P, I, D, memory):
 
         self.Kp=P
@@ -15,7 +15,7 @@ class Pid:
         self.I_value = 0
         self.P_value = 0
         self.D_value = 0
-        self.history = collections.deque(maxlen=self.memory)
+        self.history = []
         for i in range(self.memory):
             self.history.append(0)
         

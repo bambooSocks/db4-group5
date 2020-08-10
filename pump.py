@@ -1,4 +1,5 @@
 from stepper import Stepper
+import machine
 import _thread
 
 # used for the cooling/OD pump
@@ -13,8 +14,8 @@ class VariablePump:
 
     # speed is float between 0 - 1
     def setSpeed(self, speed):
-        assert speed > 1 or speed < 0
-
+        #assert speed > 1 or speed < 0
+        assert speed <= 1 and speed >= 0
         speedRange = self.minSpeedDelay - self.maxSpeedDelay
         speedDelay = self.minSpeedDelay - (speedRange * speed)
         self.stepper.set_step_time(speedDelay)
@@ -22,14 +23,20 @@ class VariablePump:
     # do not use outside of the class
     def __loop(self):
         while self.isRunning:
-            self.stepper.steps(20)
+            self.stepper.steps(1000)
 
     def startMotor(self):
         self.isRunning = True
-        _thread.start_new_thread(__loop, ())
+        _thread.start_new_thread(self.__loop, ())
 
     def stopMotor(self):
         self.isRunning = False
+        
+class PWMPump:
+    def __init__(self, step_pin):
+        self.pwm = machine.PWM(step_pin)
+        self.pwm.freq(10000)
+        
 
 # used for the feeding pump
 class PrecisionPump:

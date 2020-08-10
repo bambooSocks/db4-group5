@@ -10,14 +10,20 @@ from cooler import Cooler
 from PID import Pid
 from pump import VariablePump
 from read_temp_class import Thermometer
-class t_control:
+from machine import Pin
+class T_control:
     
     def __init__(self, fan_pin, peltier_pin, step_pin,thermometer_pin):
-        self.cooler = Cooler(fan_pin, peltier_pin)
-        self.pump = VariablePump(step_pin)
+        self.cooler = Cooler(Pin(fan_pin,Pin.OUT), Pin(peltier_pin,Pin.OUT))
+        
+        self.cooler.fanOn()
+        self.cooler.coolerHigh()
+        
+        
         self.pid = Pid(18,3,0.01,0,200)#temperature, P, I, D, Memory
         self.thermometer = Thermometer(thermometer_pin)
-        
+        #self.pump = PWMPump(Pin(step_pin,Pin.OUT))
+        self.pump = VariablePump(Pin(step_pin,Pin.OUT))
         self.pump.setSpeed(0.95)
         self.pump.startMotor()
         self.t = utime.time()
