@@ -1,25 +1,28 @@
-import machine
-from statistics import mean
+from machine import DAC, Pin, ADC
+from time import sleep
 
 class ODSensor:
     # frequency and pins may need to be changed
-    def __init__(self, adc, led):
-        self.adc = machine.ADC(machine.Pin(32))
-        self.led = machine.PWM(machine.Pin(27), freq = 78000)
+    def __init__(self):
+        self.DAC_MAX = 255
+        self.DAC_Vmax = 3.15
+        self.DAC_Vmin = 0.09
+
+        self.led = DAC(Pin(25), bits=8)
+        self.sensor = ADC(Pin(39))
 
     # return a single measurement
-    def measure(self):
-        # LED duty cycle may need to be changed
-        self.led.duty(31)
-
+    def measure(self, intensity):
+        led.write(intensity)
+        sleep(0.01)
         data = []
         
-        # get 120 measurements
+        #get 120 measurements
         for j in range(120):
-            data.append(self.adc.read())
+            data.append(sensor.read())
 
-        # sort data increasing
-        data.sort()
+        data.sort() #sort data increasing
+        sum_middle = sum(data[30:90]) #find sum of middle numbers
+        avg = sum_middle / 60 #find average of middle numbers
         
-        # return average of middle numbers
-        return mean(data[30:90])
+        return avg
