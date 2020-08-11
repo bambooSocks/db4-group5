@@ -3,6 +3,7 @@ import time
 from umqtt.robust import MQTTClient
 import os
 import sys
+import key
 
 class MQTT:
 
@@ -31,10 +32,10 @@ class MQTT:
         # create a random MQTT clientID 
         random_num = int.from_bytes(os.urandom(3), 'little')
         mqtt_client_id = bytes('client_'+str(random_num), 'utf-8')
-
+        #email = db4g5@hotmail.com password db4password
         self.ADAFRUIT_IO_URL = b'io.adafruit.com' 
-        self.ADAFRUIT_USERNAME = b'majtanm'
-        self.ADAFRUIT_IO_KEY = b'aio_eilN58DHxMHA6UdHMsEAs4DRsQRC'
+        self.ADAFRUIT_USERNAME = b'db4g5'
+        self.ADAFRUIT_IO_KEY = KEY
 
         self.client = MQTTClient(client_id=mqtt_client_id, 
                             server=self.ADAFRUIT_IO_URL, 
