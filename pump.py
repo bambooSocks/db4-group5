@@ -9,13 +9,14 @@ class VariablePump:
         self.stepper = Stepper(step_pin, None)
         self.isRunning = False
 
-        self.maxSpeedDelay = 20
-        self.minSpeedDelay = 1000
+        self.maxSpeedDelay = 100
+        self.minSpeedDelay = 2000
+        self.setSpeed(0)
 
     # speed is float between 0 - 1
     def setSpeed(self, speed):
-        #assert speed > 1 or speed < 0
-        assert speed <= 1 and speed >= 0
+        assert (speed <= 1) and (speed >= 0)
+
         speedRange = self.minSpeedDelay - self.maxSpeedDelay
         speedDelay = self.minSpeedDelay - (speedRange * speed)
         self.stepper.set_step_time(speedDelay)
@@ -43,7 +44,7 @@ class PrecisionPump:
 
     def __init__(self, step_pin, dir_pin):
         self.stepper = Stepper(step_pin, dir_pin)
-        self.stepper.set_step_time(100)
+        self.stepper.set_step_time(750)
         self.dir = 1
 
         self.stepsPerML = 7 #TODO: determine proper amount

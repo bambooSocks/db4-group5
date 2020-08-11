@@ -25,11 +25,14 @@ class Stepper:
         if self.dir is not None:
             self.dir.value(0 if step_count > 0 else 1)
         for i in range(abs(step_count)):
-            self.stp.value(1)
-            sleep_us(self.step_time)
-            self.stp.value(0)
-            sleep_us(self.step_time)
+            self.step()
         self.current_position += step_count
+
+    def step(self):
+        self.stp.value(1)
+        sleep_us(1)
+        self.stp.value(0)
+        sleep_us(int(self.step_time))
 
     def rel_angle(self, angle):
         """Rotate stepper for given relative angle."""
