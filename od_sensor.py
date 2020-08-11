@@ -13,13 +13,13 @@ class ODSensor:
 
     # return a single measurement
     def measure(self, intensity):
-        led.write(intensity)
+        self.led.write(intensity)
         sleep(0.01)
         data = []
         
         #get 120 measurements
         for j in range(120):
-            data.append(sensor.read())
+            data.append(self.sensor.read())
 
         data.sort() #sort data increasing
         sum_middle = sum(data[30:90]) #find sum of middle numbers
