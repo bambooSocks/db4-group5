@@ -1,4 +1,4 @@
-from od_sensor.py import ODSensor
+from od_sensor import ODSensor
 
 od = ODSensor()
 
