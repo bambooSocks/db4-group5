@@ -6,40 +6,40 @@ class Pid:
     intented to go between 0 and 100
     """
     from collections import deque
-    def __init__(self, target, P, I, D, memory):
+    def __init__(self, target, P, I, D, memoryFactor): 
 
         self.Kp=P
         self.Ki=I
         self.Kd=D
-        self.memory = memory
+        
         self.I_value = 0
         self.P_value = 0
         self.D_value = 0
-        self.history = []
-        for i in range(self.memory):
-            self.history.append(0)
+        
+        self.memoryFactor = memoryFactor
+        self.history = 0
+        self.historyWeight = 0
         
         self.target=target
 
         self.output = 0
-
-        #self.last_update_time = pyb.millis()
+        
+        self.lastDiff = 0
 
 
     def update(self,reading):
+        diff = self.target - reading
         
-        self.history.append(reading)
-
-        self.P_value = self.Kp * (self.target-self.history[-1]) #Latest reading
+        self.history = self.history*self.memoryFactor
+        self.historyWeight = self.historyWeight*self.memoryFactor
+        self.historyWeight += 1
+        self.history += diff / (self.historyWeight)
         
-        self.D_value = self.Kd * (self.history[-1]-self.history[-2])
+        self.P_value = self.Kp * diff
+        self.I_value = self.Ki * self.history
+        self.D_value = self.Kd * (diff-self.lastDiff)
+        self.output = self.P_value + self.I_value + self.D_value
         
-        self.I_value = 0
-        for i in range(self.memory):
-            self.I_value += (self.target-self.history[i]) * self.Ki
-            
-    
-        self.output = self.P_value + self.I_value - self.D_value
+        self.lastDiff = diff
         
-        #self.last_update_time=pyb.millis()
         return(self.output)

@@ -8,8 +8,10 @@ class ODSensor:
         self.DAC_Vmax = 3.15
         self.DAC_Vmin = 0.09
 
-        self.led = DAC(Pin(25), bits=8)
-        self.sensor = ADC(Pin(39))
+        self.led = DAC(Pin(25), bits=8) 
+        self.sensor = ADC(Pin(39)) #Green
+        #self.sensor.atten(ADC.ATTN_11DB)
+        self.sensor.width(ADC.WIDTH_10BIT)
 
     # return a single measurement
     def measure(self, intensity):

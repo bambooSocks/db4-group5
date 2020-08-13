@@ -21,29 +21,34 @@ class T_control:
         self.cooler.coolerHigh()
         
         
-        self.pid = Pid(18,3,0.01,0,200)#temperature, P, I, D, Memory
+        self.pid = Pid(17,1,0.01,0,0.99)  #(temperature, P, I, D, memoryFactor)
         self.thermometer = Thermometer(thermometer_pin)
         self.pump = PWMPump(Pin(step_pin,Pin.OUT))
+        for i in range(14):
+            self.pump.pwm.freq(500+i*1000)
+            utime.sleep(0.1)
         self.pump.pwm.freq(15000)
         #self.pump = VariablePump(Pin(step_pin,Pin.OUT))
-        #self.pump.setSpeed(0.95)
+        #self.pump.setSpeed(0.90)
         #self.pump.startMotor()
-        self.t = utime.time()
-        self.intensity = 0
         
         
         
     def call(self):
-        #find out how long has passed since last call
-        dt = utime.time()-self.t
         self.t=utime.time()
-        pid=self.pid.update(self.thermometer.read())/100
-        print(pid)
-        self.intensity += dt*pid
-        if self.intensity >= dt:
-            self.cooler.coolerLow()
-            self.intensity-=dt
-        else:
+        read=-self.pid.update(self.thermometer.read())
+        print(read)
+        if read > 2:
             self.cooler.coolerHigh()
+            self.pump.pwm.freq(15000)
+        elif read >= 1:
+            self.cooler.coolerLow()
+            self.pump.pwm.freq(15000)
+        elif read >= -2:
+            self.cooler.coolerLow()
+            self.pump.pwm.freq(10000+4750*read)
+        else:
+            self.cooler.coolerLow()
+            self.pump.pwm.freq(500)
     
         
