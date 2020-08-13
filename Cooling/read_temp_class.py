@@ -2,8 +2,6 @@ from machine import Pin
 from machine import ADC
 from machine import DAC
 from math import log
-
-import machine
 import utime
 
 class Thermometer():
@@ -25,13 +23,14 @@ class Thermometer():
         
     
     def read(self):
-        raw_read = []
         # Collect NUM_SAMPLES
-        for i in range(1, self.NUM_SAMPLES+1):
-            raw_read.append(self.adc.read())
+        num = 0
+        for i in range(self.NUM_SAMPLES):
+            num += self.adc.read()
+        
     
         # Average of the NUM_SAMPLES and look it up in the table
-        raw_average = sum(raw_read)/self.NUM_SAMPLES
+        raw_average = num/self.NUM_SAMPLES
         #print('raw_avg = ' + str(raw_average))
         #print('V_measured = ' + str(self.adc_V_lookup[round(raw_average)]))
     

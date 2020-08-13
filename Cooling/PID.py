@@ -6,7 +6,7 @@ class Pid:
     intented to go between 0 and 100
     """
     from collections import deque
-    def __init__(self, target, P, I, D, memoryFactor): 
+    def __init__(self, target, P, I, D, memoryFactor): #Memory factor 0.99 is a halftime of 11½ min
 
         self.Kp=P
         self.Ki=I
@@ -31,9 +31,7 @@ class Pid:
         diff = self.target - reading
         
         self.history = self.history*self.memoryFactor
-        self.historyWeight = self.historyWeight*self.memoryFactor
-        self.historyWeight += 1
-        self.history += diff / (self.historyWeight)
+        self.history += diff
         
         self.P_value = self.Kp * diff
         self.I_value = self.Ki * self.history

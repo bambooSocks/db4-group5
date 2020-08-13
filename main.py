@@ -6,8 +6,9 @@ from time import sleep
 if __name__ == "__main__":
 
     # class declarations
-    broker = MQTT("iPhone", "qqwweerr")
+    broker = MQTT("Asger","1234567890") 
     t_control = T_control(14,32,12,34)
+    t_control.startPID()
     od = ODSensor()
 
     def subCB(topic, msg):
@@ -21,14 +22,16 @@ if __name__ == "__main__":
             print("Unknown topic received")
 
     # setup subscriptions
-    broker.setCallback(subCB)
-    broker.subscribe("PID_P")
-    broker.subscribe("PID_I")
-    broker.subscribe("PID_D")
+   # broker.setCallback(subCB)
+    #broker.subscribe("PID_P")
+    #broker.subscribe("PID_I")
+    #broker.subscribe("PID_D")
 
     # main loop
     while True:
         # all repeating actions
-        broker.publish("temp", t_control.read())
+        broker.publish("exp1.temperature",t_control.thermometer.read()) #testing
+        broker.publish("exp1.P_value",t_control.pid.P_value) #testing
+        broker.publish("exp1.I_value",t_control.pid.I_value) #testing
         sleep(10)
 
