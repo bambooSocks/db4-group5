@@ -3,6 +3,7 @@ import time
 from umqtt.robust import MQTTClient
 import os
 import sys
+import _thread
 from key import Key
 
 class MQTT:
@@ -10,6 +11,8 @@ class MQTT:
     def __init__(self, ssid, pswd):
         self.WIFI_SSID = ssid
         self.WIFI_PSWD = pswd
+
+        self.subLoopRunning = False
 
         # turn off the WiFi Access Point
         ap_if = network.WLAN(network.AP_IF)
@@ -48,6 +51,27 @@ class MQTT:
             print('could not connect to MQTT server {}{}'.format(type(e).__name__, e))
             sys.exit()
     
-    def publish(self, measurement, value):
-        mqtt_feedname = bytes('{:s}/feeds/{:s}'.format(self.ADAFRUIT_USERNAME, measurement), 'utf-8')
+    def __del__(self):
+        self.subLoopRunning = False
+
+    # used to publish new data to a certain topic
+    def publish(self, topic, value):
+        mqtt_feedname = bytes('{:s}/feeds/{:s}'.format(self.ADAFRUIT_USERNAME, topic), 'utf-8')
         self.client.publish(mqtt_feedname, bytes(str(value), 'utf-8'), qos=0)
+
+    # used to poll client subscriptions
+    def __sub_loop(self):
+        while self.subLoopRunning:
+            self.client.check_msg()
+            time.sleep(2)
+
+    # run only once with custom function func(topic, msg)
+    def setCallback(self, cb):
+        self.client.set_callback(cb)
+
+    # add a subscription
+    def subscribe(self, topic):
+        self.client.subscribe(topic)
+        if self.subLoopRunning == False:
+            self.subLoopRunning = True
+            _thread.start_new_thread(self.__sub_loop, ())

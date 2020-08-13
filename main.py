@@ -1,20 +1,34 @@
-from pump import VariablePump
-from pump import PrecisionPump
-from machine import Pin
-import time
+from mqtt import MQTT
+from temp_control import T_control
+from od_sensor import ODSensor
+from time import sleep
 
-p = VariablePump(Pin(12, Pin.OUT))
-p.startMotor()
-p.setSpeed(1)
+if __name__ == "__main__":
 
-# pp = PrecisionPump(Pin(33, Pin.OUT), Pin(27, Pin.OUT))
-# pp.step(550000)
+    # class declarations
+    broker = MQTT("iPhone", "qqwweerr")
+    t_control = T_control(14,32,12,34)
+    od = ODSensor()
 
-# 1.100.000 - 190mL
-#   550.000 - 95mL
+    def subCB(topic, msg):
+        if topic == "PID_P":
+            print("P param for PID is", msg)
+        elif topic == "PID_I":
+            print("I param for PID is", msg)
+        elif topic == "PID_D":
+            print("D param for PID is", msg)
+        else:
+            print("Unknown topic received")
 
-# while (1):
-    # print("test")
-    # for i in range(11):
-    #     p.setSpeed(0.1*i)
-    #     time.sleep(1)
+    # setup subscriptions
+    broker.setCallback(subCB)
+    broker.subscribe("PID_P")
+    broker.subscribe("PID_I")
+    broker.subscribe("PID_D")
+
+    # main loop
+    while True:
+        # all repeating actions
+        broker.publish("temp", t_control.read())
+        sleep(10)
+
