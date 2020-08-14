@@ -14,36 +14,39 @@ if __name__ == "__main__":
     disp = Display(22,23)
 
     def subCB(topic, msg):
-        if topic == "PID_P":
-            t_control.pid.Kp = msg
-        elif topic == "PID_I":
-            t_control.pid.Ki = msg
-        elif topic == "PID_I_SetValue":
-            t_control.pid.history = msg / t_control.pid.Ki
-        elif topic == "FAN":
-            if msg == "OFF":
+        topic = str(topic)
+        
+        if "PID_P" in topic:
+            t_control.pid.Kp = float(msg)
+        elif "PID_I_SetValue" in topic:
+            t_control.pid.history = float(msg) / t_control.pid.Ki    
+        elif "PID_I" in topic:
+            t_control.pid.Ki = float(msg)
+            print(msg)
+        elif "FAN" in topic:
+            if msg.decode() == "OFF":
                 t_control.cooler.fanOff()
             else:
                 t_control.cooler.fanOn()
-        elif topic == "target_temp":
-            t_control.pid.target = msg 
+        elif "target_temp" in topic:
+            t_control.pid.target = float(msg) 
         else:
             print("Unknown topic received")
 
     # setup subscriptions
     broker.setCallback(subCB)
-    #broker.subscribe("PID_P")
-    #broker.subscribe("PID_I")
-    #broker.subscribe("PID_I_SetValue")
-    #broker.subscribe("FAN")
-    #broker.subscribe("target_temp")
+    broker.subscribe("PID_P")
+    broker.subscribe("PID_I")
+    broker.subscribe("PID_I_SetValue")
+    broker.subscribe("FAN")
+    broker.subscribe("target_temp")
 
     # main loop
     while True:
         # all repeating actions
         broker.publish("exp1.temperature",t_control.thermometer.read()) #testing
         disp.write("temperature: " + str(int(t_control.thermometer.read())),0,0)
-        disp.write("Alge: " + "derp/mL",1,0)
+        disp.write("Algae: " + "derp/mL",1,0)
         disp.plot((t_control.thermometer.read()-15)*6)
         broker.publish("exp1.P_value",t_control.pid.P_value) #testing
         broker.publish("exp1.I_value",t_control.pid.I_value) #testing
