@@ -60,15 +60,19 @@ class MQTT:
     # used to publish new data to a certain topic
     def publish(self, topic, value):
         mqtt_feedname = bytes('{:s}/feeds/{:s}'.format(self.ADAFRUIT_USERNAME, topic), 'utf-8')
-        self.client.publish(mqtt_feedname, bytes(str(value), 'utf-8'), qos=0)
+        try:
+            self.client.publish(mqtt_feedname, bytes(str(value), 'utf-8'), qos=0)
+        except Exception:
+                self.connect()
 
     # used to poll client subscriptions
     def __sub_loop(self):
         while self.subLoopRunning:
-            # try:
-            self.client.check_msg()
-            time.sleep(2)
-            # except Exception:
+            try:
+                self.client.check_msg()
+                time.sleep(2)
+            except Exception:
+                self.connect()
 
 
 
