@@ -18,14 +18,16 @@ if __name__ == "__main__":
             print("I param for PID is", msg)
         elif topic == "PID_D":
             print("D param for PID is", msg)
+        elif topic == "FAN":
+            print("Fan is", msg)
         else:
             print("Unknown topic received")
 
     # setup subscriptions
-   # broker.setCallback(subCB)
-    #broker.subscribe("PID_P")
-    #broker.subscribe("PID_I")
-    #broker.subscribe("PID_D")
+    broker.setCallback(subCB)
+    broker.subscribe("PID_P")
+    broker.subscribe("PID_I")
+    broker.subscribe("PID_D")
 
     # main loop
     while True:
