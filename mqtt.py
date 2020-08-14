@@ -16,17 +16,11 @@ class MQTT:
 
         # create a random MQTT clientID 
         random_num = int.from_bytes(os.urandom(3), 'little')
-        mqtt_client_id = bytes('client_'+str(random_num), 'utf-8')
+        self.mqtt_client_id = bytes('client_'+str(random_num), 'utf-8')
         #email = db4g5@hotmail.com password db4password
         self.ADAFRUIT_IO_URL = b'io.adafruit.com' 
         self.ADAFRUIT_USERNAME = b'db4g5'
         self.ADAFRUIT_IO_KEY = Key()
-
-        self.client = MQTTClient(client_id=mqtt_client_id, 
-                            server=self.ADAFRUIT_IO_URL, 
-                            user=self.ADAFRUIT_USERNAME, 
-                            password=self.ADAFRUIT_IO_KEY,
-                            ssl=False)
 
         self.connect()
     
@@ -51,6 +45,12 @@ class MQTT:
         if attempt_count == 20:
             print('could not connect to the WiFi network')
             sys.exit()
+
+        self.client = MQTTClient(client_id=self.mqtt_client_id, 
+                    server=self.ADAFRUIT_IO_URL, 
+                    user=self.ADAFRUIT_USERNAME, 
+                    password=self.ADAFRUIT_IO_KEY,
+                    ssl=False)
 
         try:            
             self.client.connect()
