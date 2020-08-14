@@ -47,7 +47,7 @@ class PrecisionPump:
         self.stepper.set_step_time(750)
         self.dir = 1
 
-        self.stepsPerML = 5670 #TODO: determine proper amount
+        self.stepsPerML = 5680 #TODO: determine proper amount
 
     def feed(self, ml_amount):
         stepsToTake = ml_amount * self.stepsPerML * self.dir
