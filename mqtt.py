@@ -14,8 +14,6 @@ class MQTT:
 
         self.subLoopRunning = False
 
-        self.connect()
-
         # create a random MQTT clientID 
         random_num = int.from_bytes(os.urandom(3), 'little')
         mqtt_client_id = bytes('client_'+str(random_num), 'utf-8')
@@ -29,11 +27,8 @@ class MQTT:
                             user=self.ADAFRUIT_USERNAME, 
                             password=self.ADAFRUIT_IO_KEY,
                             ssl=False)
-        try:            
-            self.client.connect()
-        except Exception as e:
-            print('could not connect to MQTT server {}{}'.format(type(e).__name__, e))
-            sys.exit()
+
+        self.connect()
     
     def __del__(self):
         self.subLoopRunning = False
@@ -55,6 +50,12 @@ class MQTT:
 
         if attempt_count == 20:
             print('could not connect to the WiFi network')
+            sys.exit()
+
+        try:            
+            self.client.connect()
+        except Exception as e:
+            print('could not connect to MQTT server {}{}'.format(type(e).__name__, e))
             sys.exit()
 
     # used to publish new data to a certain topic
