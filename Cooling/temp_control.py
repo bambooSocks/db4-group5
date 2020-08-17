@@ -44,12 +44,12 @@ class T_control:
         elif read >= 1:
             self.cooler.coolerLow()
             self.pump.pwm.freq(5000)
-        elif read >= -2:
+        elif read >= -1:
             self.cooler.coolerLow()
             self.pump.pwm.freq(3333+int(1666*read))
         else:
             self.cooler.coolerLow()
-            self.pump.pwm.freq(50)
+            self.pump.pwm.freq(200)
     
     def __loop(self):
         while self.isRunning:

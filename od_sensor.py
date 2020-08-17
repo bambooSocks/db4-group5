@@ -3,7 +3,7 @@ from time import sleep
 
 class ODSensor:
     # frequency and pins may need to be changed
-    def __init__(self):
+    def __init__(self,LEDPin, sensorPin): #25,39.   26,36.
         self.DAC_MAX = 255
         self.DAC_Vmax = 3.15
         self.DAC_Vmin = 0.09

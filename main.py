@@ -34,14 +34,17 @@ if __name__ == "__main__":
             print("Unknown topic received")
 
     # setup subscriptions
+    
     broker.setCallback(subCB)
+    broker.subscribe("FAN")
     broker.subscribe("PID_P")
     broker.subscribe("PID_I")
+    sleep(0.1)
     broker.subscribe("PID_I_SetValue")
-    broker.subscribe("FAN")
     broker.subscribe("target_temp")
 
     # main loop
+    print("reached main loop")
     while True:
         # all repeating actions
         broker.publish("exp1.temperature",t_control.thermometer.read()) #testing
