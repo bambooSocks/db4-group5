@@ -1,9 +1,9 @@
 from od_sensor import ODSensor
 from pump import PWMPump
 from machine import Pin
-p = PWMPump(Pin(12,Pin.OUT)) #LED2 is pin 26
+p = PWMPump(Pin(12,Pin.OUT)) 
 p.pwm.freq(1000)
-od = ODSensor() #OD2 is pin 36
+od = ODSensor(25,39) #LED2 is pin 2 6#OD2 is pin 36 
 count = 50
 
 import utime

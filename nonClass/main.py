@@ -10,7 +10,7 @@ if __name__ == "__main__":
     broker = MQTT("Asger","1234567890") 
     t_control = T_control(14,32,12,34)
     t_control.startPID()
-    od = ODSensor()
+    od = ODSensor(25,39)
     disp = Display(22,23)
 
     def subCB(topic, msg):
@@ -42,10 +42,12 @@ if __name__ == "__main__":
     sleep(0.1)
     broker.subscribe("PID_I_SetValue")
     broker.subscribe("target_temp")
-
+    count = 50
     # main loop
     print("reached main loop")
     while True:
+        
+        print(od.measure(200))
         # all repeating actions
         broker.publish("exp1.temperature",t_control.thermometer.read()) #testing
         disp.write("temperature: " + str(int(t_control.thermometer.read())),0,0)
@@ -54,4 +56,3 @@ if __name__ == "__main__":
         broker.publish("exp1.P_value",t_control.pid.P_value) #testing
         broker.publish("exp1.I_value",t_control.pid.I_value) #testing
         sleep(10)
-

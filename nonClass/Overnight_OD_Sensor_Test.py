@@ -18,11 +18,6 @@ while True:
     for i in range(count):
         a.append(od1.measure(150))
     avr = sum(a)/count
-    b = 0
-    for i in a:
-        b += (i-avr)**2
-    std = (b/count)**0.5
-    se = std/count**0.5
     print("Average: " + str(avr))
     
     

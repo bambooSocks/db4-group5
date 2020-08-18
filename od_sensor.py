@@ -16,7 +16,6 @@ class ODSensor:
     # return a single measurement
     def measure(self, intensity):
         self.led.write(intensity)
-        sleep(0.01)
         data = []
         
         #get 120 measurements
